@@ -1,20 +1,19 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-// Old
 module.exports = {
-    entry: "./src/app.jsx?",
+    // mode: "development", // Stop minifying
+    entry: ["./resources/js/index.jsx?", "./resources/scss/index.scss"],
     output: {
         path: path.join(__dirname, "/public"),
-        filename: "app.min.js",
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./src/index.html",
+            template: "./resources/index.html",
         }),
     ],
     resolve: {
-        modules: [__dirname, "src", "node_modules"],
+        modules: [__dirname, "resources", "node_modules"],
         extensions: ["*", ".js", ".tsx", ".ts"],
     },
     module: {
@@ -27,6 +26,22 @@ module.exports = {
                 },
             },
             {
+                // Will compile .scss files into public/css
+                test: /\.scss?$/,
+                use: [
+                    {
+                        loader: "file-loader",
+                        options: {
+                            name: "css/[name].css",
+                        },
+                    },
+                    "extract-loader",
+                    //"style-loader", // Doesn't work yet
+                    "css-loader",
+                    "sass-loader",
+                ], // Goes from right to left (or bottom to top)
+            },
+            {
                 test: /\.(png|svg|jpg|gif)$/,
                 exclude: /node_modules/,
                 use: ["file-loader"],
@@ -34,34 +49,3 @@ module.exports = {
         ],
     },
 };
-
-// module.exports = {
-//     entry: "./src/app.jsx",
-//     output: {
-//         filename: "bundle.[hash].js",
-//     },
-//     plugins: [
-//         new HtmlWebpackPlugin({
-//             template: "./src/index.html",
-//         }),
-//     ],
-//     resolve: {
-//         module: [__dirname, "src", "node_modules"],
-//         extensions: ["*", ".js", ".tsx", ".ts"],
-//     },
-//     module: {
-//         rules: [
-//             {
-//                 test: /\.jsx?$/,
-//                 exclude: /node_modules/,
-//                 loader: require.resolve("babel-loader"),
-//             },
-//             // {
-//             //     test: /\.css?$/,
-//             //     use: ["style-loader", "css-loader"],
-//             //     // exclude: /node_modules/,
-//             //     // loader: require.resolve("babel-loader")
-//             // },
-//         ],
-//     },
-// };

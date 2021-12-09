@@ -2,5 +2,5 @@
 
 # Default ReactJS Template with Webpack
 ## Todo's
- - Allow .jsx
  - Make it so that you don't need to import react in every file
+ - allow s?css imports in js
